@@ -1,0 +1,79 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.song'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	cucumberRuntime{
+		extendsFrom testImplementation	
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation  'org.mariadb.jdbc:mariadb-java-client:2.7.3'
+	
+	// Cucumber 및 관련 의존성
+//    implementation 'io.cucumber:cucumber-spring:7.12.0'
+//    implementation 'io.cucumber:cucumber-java:7.12.0'
+
+    // RestAssured (API 테스트)
+//    implementation 'io.rest-assured:rest-assured:5.3.0'
+
+	
+	// implementation 'com.sun.jna:jna:5.9.0'  // 최신 JNA 버전
+	// https://mvnrepository.com/artifact/at.bestsolution.efxclipse.eclipse/com.sun.jna
+    // implementation 'at.bestsolution.efxclipse.eclipse:com.sun.jna:5.8.0.v20210503-0343'
+	
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+    testImplementation 'io.cucumber:cucumber-java:6.6.0'
+    testImplementation 'io.cucumber:cucumber-junit:6.6.0'
+    testImplementation 'io.cucumber:cucumber-spring:6.6.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:6.6.0'
+	//testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+task cucumber(){
+	dependsOn assemble, testClasses
+	doLast{
+		javaexec{
+			main = 'io.cucumber.core.cli.Main'
+			classpath = configuration.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = ['--plugin', 'pretty',
+				'--plugin', 'junit:build/report-results/cucumber.xml',
+				'--glue', 'com.song',
+				'src/test/resources'
+			]
+		}
+	}
+}

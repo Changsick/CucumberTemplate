@@ -1,0 +1,48 @@
+spring:
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        allow_update_outside_transaction: true
+  datasource:
+    url: jdbc:mysql:aurora//localhost:3306/test_song?useSSL=false&useMysqlMetadata=true&createDatabaseIfNotExist=true&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC&maxAllowedPacket=134217728
+    username: root
+    password: song
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 5
+      connection-timeout: 10000
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+#  profiles:
+#    active: local
+
+server:
+  port: 5600
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+
+logging:
+  level:
+    org:
+      springframework: fatal
+      hibernate:
+        SQL: debug
