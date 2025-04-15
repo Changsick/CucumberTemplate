@@ -28,6 +28,7 @@ public class TestRestController {
 	public ResponseEntity<List<TestTbVO>> test1() { // @RequestParam String val1
 		List<TestTbVO> dataList = testService.getTestData();
 		log.info("dataList : " + dataList);
+
 		return new ResponseEntity<>(dataList, HttpStatus.OK);
 	}
 	
